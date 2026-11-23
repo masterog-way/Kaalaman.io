@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="purple">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#6d28d9" />
+<title>QUIZ KAALAMAN</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ TOAST HOST ============ -->
+<div class="toast-host" id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ============ QUICK LOGIN FLOATING BUTTON (top-left) ============ -->
+<button id="quickLoginBtn" class="quick-brain-btn" type="button"
+        title="Quick Log In" aria-label="Quick Log In">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M12.5 2.2c-.9 0-1.7.3-2.3.8-.5-.3-1.2-.5-1.9-.5C6.5 2.5 5 3.7 4.6 5.4 3.1 5.8 2 7.2 2 8.9c0 1 .4 2 1.1 2.7-.2.5-.3 1-.3 1.5 0 1.6 1 3 2.4 3.6-.1.3-.1.6-.1 1 0 1.9 1.6 3.5 3.5 3.5.8 0 1.5-.2 2-.7v-1.9c-.4.3-.9.5-1.5.5-1 0-1.8-.8-1.8-1.8 0-.5.2-.9.5-1.2l-.5-1.6c-1 .1-2-.6-2.3-1.6-.3-1 .2-2.1 1.2-2.5l.7-.3.1-.8c.1-1 .9-1.7 1.9-1.7.3 0 .6.1.8.2l1.1.6.8-.9c.3-.4.8-.6 1.3-.6 1 0 1.7.8 1.7 1.8l.1.5c.1 1 .9 1.7 1.9 1.7h.3c.9 0 1.7.8 1.7 1.7 0 .8-.6 1.5-1.4 1.7l.1 1.4c1.1.2 1.9 1.1 1.9 2.2 0 .9-.5 1.6-1.3 2v1.6c0 .9-.7 1.6-1.6 1.6-.4 0-.8-.2-1.1-.4v1.7c.4.2.8.3 1.3.3 1.5 0 2.8-1.1 3.1-2.6 1-.5 1.8-1.6 1.8-2.9 0-.6-.2-1.2-.5-1.6.8-.7 1.3-1.8 1.3-3 0-1.7-1.1-3.2-2.7-3.6-.1-1.9-1.6-3.4-3.6-3.4-.2 0-.4 0-.6.1-.5-1.1-1.6-1.9-2.9-1.9z"/>
+  </svg>
+</button>
+
+<!-- ============ AUTH GATE (shown on open) ============ -->
+<div id="authGate" class="gate">
+  <div class="gate-card">
+    <div class="gate-brand">
+      <div class="gate-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <path fill="currentColor" d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.7 3.7L12 11.7 5.3 8 12 4.3ZM5 9.6l6 3.3v7.6l-6-3.3V9.6Zm8 10.9v-7.6l6-3.3v7.6l-6 3.3Z"/>
+        </svg>
+      </div>
+      <h1 class="gate-title">QUIZ <span>KAALAMAN</span></h1>
+      <p class="gate-sub">Patalasan ang isip. Test your knowledge.</p>
+    </div>
+
+    <div id="gateChoice">
+      <p class="gate-ask">Paano ka magsisimula? <em>How do you want to start?</em></p>
+      <div class="gate-actions">
+        <button class="btn btn-gate btn-gate-primary" type="button" data-go="signin">
+          <i class="bi bi-person-plus-fill"></i>
+          <span><strong>Sign In</strong><small>Create a new account</small></span>
+        </button>
+        <button class="btn btn-gate btn-gate-outline" type="button" data-go="login">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span><strong>Log In</strong><small>I already have an account</small></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGN IN -->
+    <form id="signinForm" class="gate-form d-none" novalidate>
+      <button class="gate-back" type="button" data-go="back"><i class="bi bi-arrow-left"></i> Back</button>
+      <h2 class="gate-form-title">Sign In</h2>
+      <p class="gate-form-sub">Create your player account.</p>
+
+      <div class="mb-3">
+        <label class="form-label" for="signinUser">Username</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input type="text" class="form-control" id="signinUser" autocomplete="username"
+                 placeholder="e.g. juan_dela_cruz" maxlength="20" required />
+        </div>
+        <div class="form-text" id="userHint">3–20 characters. Letters, numbers, underscore.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="signinEmail">Email</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input type="email" class="form-control" id="signinEmail" autocomplete="email"
+                 placeholder="you@email.com" required />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="signinPass">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" class="form-control" id="signinPass" autocomplete="new-password"
+                 placeholder="At least 6 characters" required />
+          <button class="btn btn-eye" type="button" data-toggle-pass="signinPass"
+                  aria-label="Show password"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="signinPass2">Confirm Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" class="form-control" id="signinPass2" autocomplete="new-password"
+                 placeholder="Repeat your password" required />
+          <button class="btn btn-eye" type="button" data-toggle-pass="signinPass2"
+                  aria-label="Show password"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="signinShowAll" />
+        <label class="form-check-label" for="signinShowAll">Show passwords</label>
+      </div>
+
+      <div class="alert alert-danger py-2 d-none" id="signinError" role="alert"></div>
+      <button class="btn btn-gate-primary w-100 py-2" type="submit">
+        <i class="bi bi-check2-circle"></i> Sign In &amp; Register
+      </button>
+    </form>
+
+    <!-- LOG IN -->
+    <form id="loginForm" class="gate-form d-none" novalidate>
+      <button class="gate-back" type="button" data-go="back"><i class="bi bi-arrow-left"></i> Back</button>
+      <h2 class="gate-form-title">Log In</h2>
+      <p class="gate-form-sub">Welcome back, player.</p>
+
+      <div class="mb-3">
+        <label class="form-label" for="loginUser">Username</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input type="text" class="form-control" id="loginUser" autocomplete="username"
+                 placeholder="Your username" required />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="loginPass">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" class="form-control" id="loginPass" autocomplete="current-password"
+                 placeholder="Your password" required />
+          <button class="btn btn-eye" type="button" data-toggle-pass="loginPass"
+                  aria-label="Show password"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="loginShowAll" />
+        <label class="form-check-label" for="loginShowAll">Show password</label>
+      </div>
+
+      <div class="alert alert-danger py-2 d-none" id="loginError" role="alert"></div>
+      <button class="btn btn-gate-primary w-100 py-2" type="submit">
+        <i class="bi bi-box-arrow-in-right"></i> Log In
+      </button>
+      <p class="tiny-note mt-3 mb-0">
+        Demo admin: <code>Mr.Admin1</code> / <code>Admin123!</code>
+      </p>
+    </form>
+  </div>
+  <p class="gate-foot">© <span id="gateYear">2026</span> QUIZ KAALAMAN · Isang lungsod ng kaalaman</p>
+</div>
+
+<!-- ============ QUICK LOGIN MODAL ============ -->
+<div class="modal fade" id="quickLoginModal" tabindex="-1" aria-labelledby="quickLoginLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content quick-modal">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="quickLoginLabel">
+          <i class="bi bi-lightning-charge-fill"></i> Quick Log In
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <p class="quick-hint">
+          Enter the <strong>3-digit ID</strong> given to you when you registered.
+          Makikita mo ito sa iyong Profile.
+        </p>
+        <label class="form-label" for="quickId">Your ID</label>
+        <input type="text" class="form-control id-input" id="quickId" inputmode="numeric"
+               maxlength="3" placeholder="000" autocomplete="off" aria-describedby="quickIdHelp" />
+        <div class="form-text" id="quickIdHelp">3 digits — halimbawa: 007</div>
+        <div class="alert alert-warning py-2 mt-3 d-none" id="quickError" role="alert"></div>
+        <button class="btn btn-gate-primary w-100 py-2 mt-2" type="button" id="quickSubmit">
+          <i class="bi bi-unlock-fill"></i> Unlock Log In
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="app" class="app d-none">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg app-nav sticky-top">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand" href="#" data-nav="home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path fill="currentColor" d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.7 3.7L12 11.7 5.3 8 12 4.3ZM5 9.6l6 3.3v7.6l-6-3.3V9.6Zm8 10.9v-7.6l6-3.3v7.6l-6 3.3Z"/>
+          </svg>
+        </span>
+        QUIZ <span class="brand-accent">KAALAMAN</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navMain" aria-controls="navMain"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#" data-nav="home"><i class="bi bi-house-door"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-nav="topics"><i class="bi bi-grid-3x3-gap"></i> Quizzes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-nav="boards"><i class="bi bi-trophy"></i> Leaderboards</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-nav="profile"><i class="bi bi-person-badge"></i> Profile</a></li>
+          <li class="nav-item admin-only d-none"><a class="nav-link" href="#" data-nav="admin"><i class="bi bi-shield-lock"></i> Admin</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <span class="chip" id="navIdChip" title="Your 3-digit ID"><i class="bi bi-hash"></i><span id="navId">000</span></span>
+          <span class="chip chip-user" id="navUserChip"><i class="bi bi-person-circle"></i><span id="navUser">player</span></span>
+          <button class="btn btn-sm btn-outline-light" id="logoutBtn" type="button">
+            <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Log out</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container-fluid px-3 py-4 app-main">
+
+    <!-- ============ HOME ============ -->
+    <section id="view-home" class="view">
+      <div class="hero card-surface mb-4">
+        <div class="hero-text">
+          <h2>Kumusta, <span id="homeName">Player</span>! <span class="wave">👋</span></h2>
+          <p class="mb-3">
+            Pumili ng paksa, piliin ang difficulty, at subukan ang iyong kaalaman.
+            Pick a subject, choose a difficulty, and prove what you know.
+          </p>
+          <div class="hero-stats">
+            <div class="mini-stat"><span id="hsPlayed">0</span><small>Quizzes</small></div>
+            <div class="mini-stat"><span id="hsAcc">0%</span><small>Accuracy</small></div>
+            <div class="mini-stat"><span id="hsRating">0</span><small>Rating</small></div>
+            <div class="mini-stat"><span id="hsPoints">0</span><small>Points</small></div>
+          </div>
+          <button class="btn btn-gate-primary mt-3" type="button" data-nav="topics">
+            <i class="bi bi-play-fill"></i> Start a Quiz
+          </button>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="150" height="150">
+            <path fill="currentColor" d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.7 3.7L12 11.7 5.3 8 12 4.3ZM5 9.6l6 3.3v7.6l-6-3.3V9.6Zm8 10.9v-7.6l6-3.3v7.6l-6 3.3Z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h3 class="section-title mb-0"><i class="bi bi-trophy-fill"></i> Top Players</h3>
+        <div class="seg" role="tablist" aria-label="Leaderboard type">
+          <button class="seg-btn active" data-board="category" type="button">Per Category</button>
+          <button class="seg-btn" data-board="overall" type="button">Overall Rating</button>
+          <button class="seg-btn" data-board="difficulty" type="button">Per Difficulty</button>
+        </div>
+      </div>
+
+      <div class="card-surface p-3 p-md-4 mb-4">
+        <div id="boardFilters" class="mb-3"></div>
+        <div id="boardBody" class="table-responsive"></div>
+      </div>
+
+      <h3 class="section-title"><i class="bi bi-grid-3x3-gap-fill"></i> Quiz Categories</h3>
+      <div class="row g-3" id="topicGridHome"></div>
+    </section>
+
+    <!-- ============ TOPICS ============ -->
+    <section id="view-topics" class="view d-none">
+      <h3 class="section-title"><i class="bi bi-grid-3x3-gap-fill"></i> Choose Your Quiz</h3>
+      <p class="section-sub">Sampung paksa. Ten subjects — piliin ang iyong labanan.</p>
+      <div class="row g-3" id="topicGrid"></div>
+    </section>
+
+    <!-- ============ QUIZ SETUP ============ -->
+    <section id="view-setup" class="view d-none">
+      <button class="gate-back mb-3" type="button" data-nav="topics">
+        <i class="bi bi-arrow-left"></i> All categories
+      </button>
+      <div class="card-surface p-4" id="setupCard"></div>
+    </section>
+
+    <!-- ============ QUIZ PLAY ============ -->
+    <section id="view-play" class="view d-none">
+      <div class="card-surface play-card" id="playCard"></div>
+    </section>
+
+    <!-- ============ RESULT ============ -->
+    <section id="view-result" class="view d-none">
+      <div class="card-surface p-4" id="resultCard"></div>
+    </section>
+
+    <!-- ============ LEADERBOARDS ============ -->
+    <section id="view-boards" class="view d-none">
+      <h3 class="section-title"><i class="bi bi-trophy-fill"></i> Leaderboards</h3>
+      <div class="seg mb-3" role="tablist" aria-label="Leaderboard type">
+        <button class="seg-btn active" data-board2="category" type="button">Per Category</button>
+        <button class="seg-btn" data-board2="overall" type="button">Overall Rating</button>
+        <button class="seg-btn" data-board2="difficulty" type="button">Per Difficulty</button>
+      </div>
+      <div class="card-surface p-3 p-md-4">
+        <div id="boardFilters2" class="mb-3"></div>
+        <div id="boardBody2" class="table-responsive"></div>
+      </div>
+    </section>
+
+    <!-- ============ PROFILE ============ -->
+    <section id="view-profile" class="view d-none">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="card-surface p-4 text-center profile-card">
+            <div class="avatar" id="pfAvatar">P</div>
+            <h4 class="mt-3 mb-1" id="pfName">player</h4>
+            <span class="badge admin-badge d-none" id="pfAdminBadge">ADMIN</span>
+            <span class="badge banned-badge d-none" id="pfBannedBadge">BANNED</span>
+            <p class="text-muted small mb-1" id="pfEmail">—</p>
+            <div class="id-box mt-2">
+              <small>My ID</small>
+              <strong id="pfId">000</strong>
+              <button class="btn btn-sm btn-copy" id="pfCopyId" type="button" title="Copy ID">
+                <i class="bi bi-clipboard"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-surface p-4 mt-4">
+            <h6 class="mb-3"><i class="bi bi-pencil-square"></i> Request a Name Change</h6>
+            <div class="mb-2">
+              <input type="text" class="form-control form-control-sm" id="pfNewName"
+                     placeholder="New username" maxlength="20" />
+            </div>
+            <button class="btn btn-gate-primary btn-sm w-100" id="pfRequestName" type="button">
+              Send Request to Admin
+            </button>
+            <div id="pfReqStatus" class="mt-3"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="row g-3 mb-4" id="pfStats"></div>
+
+          <div class="card-surface p-4 mb-4">
+            <h6 class="mb-3"><i class="bi bi-bar-chart-line-fill"></i> Performance by Category</h6>
+            <div id="pfPerCat"></div>
+          </div>
+
+          <div class="card-surface p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="mb-0"><i class="bi bi-clock-history"></i> Quiz History</h6>
+              <span class="text-muted small" id="pfHistCount"></span>
+            </div>
+            <div id="pfHistory" class="table-responsive"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ADMIN ============ -->
+    <section id="view-admin" class="view d-none">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h3 class="section-title mb-0"><i class="bi bi-shield-lock-fill"></i> Admin Control Room</h3>
+        <span class="chip chip-user"><i class="bi bi-person-badge"></i> ID 999</span>
+      </div>
+
+      <ul class="nav nav-pills admin-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-users" type="button" role="tab">
+            <i class="bi bi-people-fill"></i> Players
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-requests" type="button" role="tab">
+            <i class="bi bi-envelope-paper-fill"></i> Name Requests
+            <span class="badge rounded-pill bg-danger ms-1 d-none" id="reqBadge">0</span>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-theme" type="button" role="tab">
+            <i class="bi bi-palette-fill"></i> Appearance
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-site" type="button" role="tab">
+            <i class="bi bi-sliders"></i> Site
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- PLAYERS -->
+        <div class="tab-pane fade show active" id="tab-users" role="tabpanel">
+          <div class="card-surface p-3 p-md-4">
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text"><i class="bi bi-search"></i></span>
+                  <input type="text" class="form-control" id="adminSearch" placeholder="Search username, email or ID" />
+                </div>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" id="adminFilter">
+                  <option value="all">All players</option>
+                  <option value="admin">Admins only</option>
+                  <option value="banned">Banned only</option>
+                  <option value="active">Active only</option>
+                </select>
+              </div>
+              <div class="col-md-3 text-md-end">
+                <button class="btn btn-sm btn-outline-danger w-100" id="adminClearHistory" type="button">
+                  <i class="bi bi-eraser"></i> Clear all history
+                </button>
+              </div>
+            </div>
+            <div id="adminUsers" class="table-responsive"></div>
+          </div>
+        </div>
+
+        <!-- REQUESTS -->
+        <div class="tab-pane fade" id="tab-requests" role="tabpanel">
+          <div class="card-surface p-3 p-md-4">
+            <h6 class="mb-3"><i class="bi bi-inbox-fill"></i> Pending Name Change Requests</h6>
+            <div id="adminRequests"></div>
+          </div>
+        </div>
+
+        <!-- THEME -->
+        <div class="tab-pane fade" id="tab-theme" role="tabpanel">
+          <div class="card-surface p-3 p-md-4">
+            <h6 class="mb-1"><i class="bi bi-palette-fill"></i> Site Theme</h6>
+            <p class="text-muted small">Baguhin ang kulay ng buong site. Changes apply to everyone.</p>
+
+            <label class="form-label mt-3" for="themePrimary">Primary colour</label>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <input type="color" class="form-control form-control-color" id="themePrimary" value="#6d28d9" />
+              <button class="btn btn-sm btn-theme-preset" data-color="#6d28d9" type="button" style="--c:#6d28d9">Purple</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#2563eb" type="button" style="--c:#2563eb">Blue</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#db2777" type="button" style="--c:#db2777">Rose</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#059669" type="button" style="--c:#059669">Emerald</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#ea580c" type="button" style="--c:#ea580c">Orange</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#0891b2" type="button" style="--c:#0891b2">Cyan</button>
+              <button class="btn btn-sm btn-theme-preset" data-color="#4338ca" type="button" style="--c:#4338ca">Indigo</button>
+            </div>
+
+            <label class="form-label mt-4" for="themeAccent">Accent colour</label>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <input type="color" class="form-control form-control-color" id="themeAccent" value="#a855f7" />
+            </div>
+
+            <label class="form-label mt-4">Site name</label>
+            <input type="text" class="form-control" id="themeSiteName" value="QUIZ KAALAMAN" maxlength="30" />
+
+            <div class="d-flex gap-2 flex-wrap mt-4">
+              <button class="btn btn-gate-primary" id="saveTheme" type="button"><i class="bi bi-check2"></i> Apply</button>
+              <button class="btn btn-outline-secondary" id="resetTheme" type="button"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SITE -->
+        <div class="tab-pane fade" id="tab-site" role="tabpanel">
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="card-surface p-4 h-100">
+                <h6 class="mb-3"><i class="bi bi-gift-fill"></i> Give Points</h6>
+                <label class="form-label" for="ptsUser">Player</label>
+                <select class="form-select mb-2" id="ptsUser"></select>
+                <label class="form-label" for="ptsAmount">Points</label>
+                <input type="number" class="form-control mb-3" id="ptsAmount" value="100" step="10" />
+                <button class="btn btn-gate-primary w-100" id="givePoints" type="button">
+                  <i class="bi bi-plus-circle"></i> Add Points
+                </button>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="card-surface p-4 h-100">
+                <h6 class="mb-3"><i class="bi bi-graph-up-arrow"></i> Site Overview</h6>
+                <div id="adminOverview" class="row g-3"></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="card-surface p-4">
+                <h6 class="mb-3"><i class="bi bi-database-fill-gear"></i> Data</h6>
+                <p class="text-muted small">
+                  Ang data ay nakaimbak sa JSON. Sa Railway, hawak ito ng server.
+                  Kapag binuksan nang lokal, nasa browser localStorage.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                  <button class="btn btn-outline-secondary btn-sm" id="exportData" type="button">
+                    <i class="bi bi-download"></i> Export JSON
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" id="importData" type="button">
+                    <i class="bi bi-upload"></i> Import JSON
+                  </button>
+                  <input type="file" id="importFile" accept=".json" class="d-none" />
+                  <span class="chip" id="storageChip"><i class="bi bi-hdd-network"></i> <span id="storageMode">local</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-foot">
+    <span>QUIZ KAALAMAN · <span id="footMode">local storage</span></span>
+    <span id="footYear"></span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="questions.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
